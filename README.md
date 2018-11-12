@@ -1,2 +1,2 @@
 # PSO-DTW1.0
-Particle swarm optimization for time series motif discovery
+Tao's Particle swarm optimization for time series motif discovery v1.0
