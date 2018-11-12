@@ -9,8 +9,7 @@ class timeseriesproblem(Benchmark):
         self.len=len(self.v)
         self.wmin=wmin
         self.wmax=wmax
-        #self.bounder = ec.Bounder(len=self.len,lower_bound=[0, self.wmin, 0, self.wmin],
-                                  #upper_bound=[self.len, self.wmax, self.len, self.wmax])
+        
         self.bounder=bounder.bounder(len=self.len,lower_bound=[0, self.wmin, 0, self.wmin],
                                   upper_bound=[self.len, self.wmax, self.len, self.wmax])
         self.maximize = False
