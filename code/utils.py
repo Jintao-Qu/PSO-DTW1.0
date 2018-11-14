@@ -9,12 +9,12 @@ def load_txt(filename):
         v.append(eval(i[0]))
     return v
 
-def main(filename):
+#def main(filename):
 
-    v=load_txt(filename)
-    print(v)
+    #v=load_txt(filename)
+    #print(v)
    # #print(len(v))
 
-if __name__ =='__main__':
-    main(filename="data/carcount.txt")
+#if __name__ =='__main__':
+    #main(filename="data/carcount.txt")
 
