@@ -1,5 +1,5 @@
 import inspyred.swarm
-
+import globalvar as gl
 
 class pso(inspyred.ec.EvolutionaryComputation):
     """Represents a basic particle swarm optimization algorithm.
@@ -62,12 +62,10 @@ class pso(inspyred.ec.EvolutionaryComputation):
                                          self._previous_population,
                                          self.archive,
                                          neighbors):
-
             nbest = max(hood)
             particle = []
             for xi, xpi, pbi, nbi in zip(x.candidate, xprev.candidate,
                                          pbest.candidate, nbest.candidate):
-                # print("xi",xi)
                 value = (xi + inertia * (xi - xpi) +
                          cognitive_rate * random.random() * (pbi - xi) +
                          social_rate * random.random() * (nbi - xi))
@@ -77,6 +75,9 @@ class pso(inspyred.ec.EvolutionaryComputation):
         return offspring
 
     def _swarm_selector(self, random, population, args):
+        f = gl.get_value("f")
+        f.write(str(max(population).fitness))
+        f.write('\n')
         return population
 
     def _swarm_replacer(self, random, population, parents, offspring, args):
