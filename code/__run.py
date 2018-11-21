@@ -17,7 +17,7 @@ for i in range(10):
    v=[]
    rf=open(filename,'r')
    for j in rf.readlines():
-      v.append(j)
+      v.append(eval(j))
    plot(v)
    show()
 
