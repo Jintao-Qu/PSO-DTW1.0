@@ -1,5 +1,8 @@
 import inspyred.swarm
 import globalvar as gl
+import copy
+import timeseriesproblem
+from random import Random
 
 class pso(inspyred.ec.EvolutionaryComputation):
     """Represents a basic particle swarm optimization algorithm.
@@ -64,21 +67,42 @@ class pso(inspyred.ec.EvolutionaryComputation):
                                          neighbors):
             nbest = max(hood)
             particle = []
-            for xi, xpi, pbi, nbi in zip(x.candidate, xprev.candidate,
-                                         pbest.candidate, nbest.candidate):
-                value = (xi + inertia * (xi - xpi) +
-                         cognitive_rate * random.random() * (pbi - xi) +
-                         social_rate * random.random() * (nbi - xi))
-                particle.append(int(value))
+            if(random.random()<gl.get_value("CRAZY_PSO") ):
+                particle = gl.get_value("problem").generator(random=self._random, args=self._kwargs)
+            else:
+                for xi, xpi, pbi, nbi in zip(x.candidate, xprev.candidate,
+                                             pbest.candidate, nbest.candidate):
+                    value = (xi + inertia * (xi - xpi) +
+                             cognitive_rate * random.random() * (pbi - xi) +
+                             social_rate * random.random() * (nbi - xi))
+                    particle.append(int(value))
             particle = self.bounder(particle, args)
             offspring.append(particle)
         return offspring
 
     def _swarm_selector(self, random, population, args):
+        if(gl.get_value("Elite")== False):
+            f = gl.get_value("f")
+            f.write(str(max(population).fitness))
+            f.write('\n')
+            return population
+
+        el = gl.get_value("Elite_list")
+        if(len(el)==0):
+            el = population#[copy.deepcopy(i) for i in population]
+            gl.set_value("Elite_list", el)
+            #print("len_el",len(el))
+        else:
+            for i in population:
+                mmin = min(el)
+                idx = el.index(min(el))
+                if(i > mmin):
+                    el[idx] = i
+            gl.set_value("Elite_list",el)
         f = gl.get_value("f")
-        f.write(str(max(population).fitness))
+        f.write(str(max(el).fitness))
         f.write('\n')
-        return population
+        return el
 
     def _swarm_replacer(self, random, population, parents, offspring, args):
         self._previous_population = population[:]
