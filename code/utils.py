@@ -7,7 +7,6 @@ def load_txt(filename):
         #if "" in i:  # 解决每行结尾有空格的问题
             #i.remove("")
         v.append(eval(i[0]))
+        #print("\rserieslength", len(v), end="")
     return v
-
-
 
