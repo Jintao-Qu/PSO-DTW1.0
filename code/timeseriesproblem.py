@@ -1,5 +1,10 @@
 from inspyred.benchmarks import *
+import utils
+from numpy import inf
 import bounder
+import dtw
+from math import log
+import globalvar as gl
 
 class timeseriesproblem(Benchmark):
     def __init__(self, v, dimensions, wmin, wmax, dist):
@@ -20,10 +25,31 @@ class timeseriesproblem(Benchmark):
         tw2 = random.randint(self.wmin, self.wmax)
         twi = random.randint(0, self.len-tw1)
         twj = random.randint(0, self.len-tw2)
-
         return [twi, tw1, twj, tw2]
 
     def evaluator(self, candidates, args):
+
+        fitness = []
+
+        for cc in candidates:
+
+            if (cc[0] + cc[1] >= cc[2]):
+                fitness.append(inf)
+            else:
+                x = self.v[int(cc[0]):int(cc[0] + cc[1])]
+                y = self.v[int(cc[2]):int(cc[2] + cc[3])]
+                print(gl.get_value("t_updated"), cc)
+                print(x, y)
+                x = utils.znormalize(x)
+                y = utils.znormalize(y)
+                dissim = dtw.compute(x, y, self.dimensions)
+                dissim = dissim / log(float(max(len(x), len(y))))
+                fitness.append(dissim)
+            #print(fitness)
+        return fitness
+    '''
+    def evaluator(self, candidates, args):
+
         from numpy import array, zeros, argmin, inf, ndim
         from scipy.spatial.distance import cdist
         from numpy.linalg import norm
@@ -63,3 +89,4 @@ class timeseriesproblem(Benchmark):
             else:
                 fitness.append(D1[-1, -1] / sum(D1.shape))
         return fitness
+    '''

@@ -6,7 +6,7 @@ import timeseriesproblem
 from utils import load_txt
 import pso
 import globalvar as gl
-def main(filename, wmin, wmax, prng=None, display=False):
+def main(filename, wmin, wmax, pop_size, max_evaluations, prng=None, display=False):
     if prng is None:
         prng = Random()
         prng.seed(time())
@@ -22,18 +22,20 @@ def main(filename, wmin, wmax, prng=None, display=False):
     ea.topology = inspyred.swarm.topologies.ring_topology
     final_pop = ea.evolve(generator=problem.generator,
                           evaluator=problem.evaluator,
-                          pop_size=16,
+                          pop_size=pop_size,
                           bounder=problem.bounder,
                           maximize=problem.maximize,
-                          max_evaluations=4800,
+                          max_evaluations=max_evaluations,
                           neighborhood_size=5)
     if display:
-        if (gl.get_value("Elite") == False):
-            best = max(final_pop)
-        else:
-            el = gl.get_value("Elite_list")
-            best = max(el)
-        print('Best Solution: \n{0}'.format(str(best)))
+        #if (gl.get_value("Elite") == False):
+        #    best = max(final_pop)
+        #else:
+        #    el = gl.get_value("Elite_list")
+        #    best = max(el)
+
+        #print('Best Solution: \n{0}'.format(str(best)))
+        print('Best Solution: \n{0}'.format(gl.get_value("gbestx")))
         return ea
 
 #if __name__ == '__main__':
