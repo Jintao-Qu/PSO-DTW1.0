@@ -88,8 +88,8 @@ class pso(inspyred.ec.EvolutionaryComputation):
         t_updated = gl.get_value("t_updated")
         gl.set_value("t_updated", t_updated+1)
         if(gl.get_value("t_updated") - gl.get_value("t_lastupdate") >= gl.get_value("TCONV")):
-            print("@@@@@@@@@","re_init")
-            print(gl.get_value("t_updated"), gl.get_value("t_lastupdate"), gl.get_value("TCONV"))
+            #print("@@@@@@@@@","re_init")
+            #print(gl.get_value("t_updated"), gl.get_value("t_lastupdate"), gl.get_value("TCONV"))
             num_generated = gl.get_value("pop_size")
             i = 0
             initial_cs = []
@@ -111,7 +111,7 @@ class pso(inspyred.ec.EvolutionaryComputation):
             self.archive = []
             #self.num_evaluations += len(initial_fit)
             #gl.set_value("t_lastupdate", gl.get_value("t_updated"))
-            return population
+            #return population
         if( max(population).fitness < gl.get_value("gbest") ):
             gl.set_value("gbest", max(population).fitness)
             gl.set_value("gbestx", max(population))
