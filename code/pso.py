@@ -79,8 +79,6 @@ class pso(inspyred.ec.EvolutionaryComputation):
                     t = random.random()
                     value += 1+t
                 particle.append(int(value))
-            if(particle[3] == 0):
-                print("#########error#####",particle)
             particle = self.bounder(particle, args)
             offspring.append(particle)
         return offspring
