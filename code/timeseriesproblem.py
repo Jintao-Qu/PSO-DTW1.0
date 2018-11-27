@@ -38,8 +38,8 @@ class timeseriesproblem(Benchmark):
             else:
                 x = self.v[int(cc[0]):int(cc[0] + cc[1])]
                 y = self.v[int(cc[2]):int(cc[2] + cc[3])]
-                print(gl.get_value("t_updated"), cc)
-                print(x, y)
+                #print(gl.get_value("t_updated"), cc)
+                #print(x, y)
                 x = utils.znormalize(x)
                 y = utils.znormalize(y)
                 dissim = dtw.compute(x, y, self.dimensions)
