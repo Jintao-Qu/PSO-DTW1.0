@@ -1,6 +1,7 @@
 import inspyred.swarm
-import globalvar as gl
+import config
 from inspyred.ec import Individual
+import utils
 import copy
 import timeseriesproblem
 from random import Random
@@ -74,7 +75,7 @@ class pso(inspyred.ec.EvolutionaryComputation):
                 value = (xi + inertia * (xi - xpi) +
                          cognitive_rate * random.random() * (pbi - xi) +
                          social_rate * random.random() * (nbi - xi))
-                if (random.random() < gl.get_value("CRAZY_PSO")):
+                if (random.random() < config.get_value("CRAZY_PSO")):
                     t = random.random()
                     value += 1+t
                 particle.append(int(value))
@@ -84,10 +85,20 @@ class pso(inspyred.ec.EvolutionaryComputation):
 
     def _swarm_selector(self, random, population, args):
 
-        t_updated = gl.get_value("t_updated")
-        gl.set_value("t_updated", t_updated+1)
-        if(gl.get_value("t_updated") - gl.get_value("t_lastupdate") >= gl.get_value("TCONV")):
-            num_generated = gl.get_value("pop_size")
+        if(config.get_value("SHOW_SWARM_DISTRIBUTION")):
+            for p in population:
+                config.get_value("Xi").append(p.candidate[0])
+                config.get_value("Wi").append(p.candidate[1])
+                config.get_value("Xj").append(p.candidate[2])
+                config.get_value("Wj").append(p.candidate[3])
+        if(config.get_value("SHOW_SWARM_DISTRIBUTION")) and config.get_value("t_updated") == 0:
+            utils.show_swarm_distribution()
+        if (config.get_value("t_updated")+1) % config.get_value("SHOW_SWARM_CYCLE") == 0:
+            utils.show_swarm_distribution()
+        t_updated = config.get_value("t_updated")
+        config.set_value("t_updated", t_updated+1)
+        if(config.get_value("t_updated") - config.get_value("t_lastupdate") >= config.get_value("TCONV")):
+            num_generated = config.get_value("pop_size")
             i = 0
             initial_cs = []
             while i < num_generated:
@@ -106,41 +117,16 @@ class pso(inspyred.ec.EvolutionaryComputation):
                     self.logger.warning('excluding candidate {0} because fitness received as None'.format(cs))
             self.logger.debug('population size is now {0}'.format(len(population)))
             self.archive = []
-        if( max(population).fitness < gl.get_value("gbest") ):
-            gl.set_value("gbest", max(population).fitness)
-            gl.set_value("gbestx", max(population))
-            gl.set_value("t_lastupdate", gl.get_value("t_updated"))
-        if (gl.get_value("SHOW_CONVERGENCE_RATE")):
-            f = gl.get_value("f_show_convergence_rate")
-            f.write(str(gl.get_value("gbest")))
-            f.write('\n')
+        if( max(population).fitness < config.get_value("gbest") ):
+            config.set_value("gbest", max(population).fitness)
+            config.set_value("gbestx", max(population))
+            config.set_value("t_lastupdate", config.get_value("t_updated"))
+        if (config.get_value("SHOW_CONVERGENCE_RATE")):
+            config.get_value("CONVERGENCE_RATE_LIST").append(config.get_value("gbest"))
+        if (config.get_value("IF_Elite") == True):
+            population = utils.Replace_Elite(population=population)
         return population
-    '''
-            if(gl.get_value("Elite") == False):
-                f = gl.get_value("f")
-                f.write(str(max(population).fitness))
-                f.write('\n')
-                return population
-    '''
-    '''
-            el = gl.get_value("Elite_list")
-            if(len(el)==0):
-                el = population
-                gl.set_value("Elite_list", el)
-            else:
-                g_best = max(el).fitness
-                for i in population:
-                    mmin = min(el)
-                    idx = el.index(min(el))
-                    if(i > mmin):
-                        el[idx] = i
-                    if(i.fitness < g_best):
-                        gl.set_value("t_lastupdate", gl.get_value("t_updated"))
-                gl.set_value("Elite_list", el)
-            f = gl.get_value("f")
-            f.write(str(max(el).fitness))
-            f.write('\n')
-    '''
+
 
     def _swarm_replacer(self, random, population, parents, offspring, args):
         self._previous_population = population[:]
