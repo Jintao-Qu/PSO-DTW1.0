@@ -14,36 +14,36 @@ def argmin(x):
 def compute(x ,y ,window_size):
     r, c = len(x), len(y)
     slope = ((float(c))/(float(r)))
-    cost = zeros((len(x)+1,len(y)+1))
+    cost = zeros((len(x)+1, len(y)+1))
     D = zeros((len(x) + 1, len(y) + 1))
     weights = zeros((len(x) + 1, len(y) + 1))
-    cost[0,0]=(x[0]-y[0])*(x[0]-y[0])
-    cost[0,1]=(x[0]-y[1])*(x[0]-y[1])
-    cost[1,0]=(x[1]-y[0])*(x[1]-y[0])
-    cost[1,1]=(x[1]-y[1])*(x[1]-y[1])
+    cost[0, 0] = (x[0]-y[0])*(x[0]-y[0])
+    cost[0, 1] = (x[0]-y[1])*(x[0]-y[1])
+    cost[1, 0] = (x[1]-y[0])*(x[1]-y[0])
+    cost[1, 1] = (x[1]-y[1])*(x[1]-y[1])
     i = 2
     offset = 4
-    while i<len(x):
-        jj=int(round(i*slope))
-        j_start=max(2,jj-window_size)
-        j_end=min(int(len(y)),jj+window_size+1)
-        j = max(2,j_start-offset)
-        while j<j_start:
-          cost[i][j]=inf
-          j +=1
+    while i < len(x):
+        jj = int(round(i*slope))
+        j_start = max(2, jj-window_size)
+        j_end = min(int(len(y)), jj+window_size+1)
+        j = max(2, j_start-offset)
+        while j < j_start:
+          cost[i][j] = inf
+          j += 1
         j = j_start
         while j < j_end:
             cost[i][j] = x[i] - y[j]
             cost[i][j] *= cost[i][j]
             j += 1
         j = j_end
-        while j < min(int(len(y)),j_end+offset+1):
-            cost[i,j] = inf
+        while j < min(int(len(y)), j_end+offset+1):
+            cost[i, j] = inf
             j += 1
-        i +=1
+        i += 1
 
 
-    D[0][0]=2*cost[0][0]
+    D[0][0] = 2*cost[0][0]
     weights[0][0]=float(2.0)
     D[0][1]=cost[0][1]+2*cost[0][0]
     weights[0][1]=float(3.0)
