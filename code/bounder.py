@@ -74,8 +74,7 @@ class bounder(object):
             if not isinstance(self.upper_bound, collections.Iterable):
                 self.upper_bound = [self.upper_bound] * len(candidate)
             bounded_candidate = candidate
-            if candidate[3] == 0:
-                print("$$$$$$$$$$$$$$",candidate)
+
             for i, (c, lo, hi) in enumerate(zip(candidate, self.lower_bound,
                                                 self.upper_bound)):
                 bounded_candidate[i] = int(max(min(c, hi), lo))
@@ -88,6 +87,5 @@ class bounder(object):
                 sublen = bounded_candidate[2] + bounded_candidate[3] - self.len
                 bounded_candidate[2] = bounded_candidate[2] - sublen
                 #bounded_candidate[3] = bounded_candidate[3] - sublen
-            if bounded_candidate[3] ==0:
-                print("#################bounded error##############")
+
             return bounded_candidate
