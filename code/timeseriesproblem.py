@@ -1,15 +1,10 @@
 from inspyred.benchmarks import *
-import utils
-from numpy import inf
 import bounder
 import dtw
-from math import log
 import globalvar as gl
-
 class timeseriesproblem(Benchmark):
-    def __init__(self, v, dimensions, wmin, wmax, dist):
+    def __init__(self, v, dimensions, wmin, wmax):
         Benchmark.__init__(self, dimensions)
-        self.dist = dist
         self.v = v
         self.len = len(self.v)
         self.wmin = wmin
@@ -30,63 +25,8 @@ class timeseriesproblem(Benchmark):
     def evaluator(self, candidates, args):
 
         fitness = []
-
-        for cc in candidates:
-
-            if (cc[0] + cc[1] >= cc[2]):
-                fitness.append(inf)
-            else:
-                x = self.v[int(cc[0]):int(cc[0] + cc[1])]
-                y = self.v[int(cc[2]):int(cc[2] + cc[3])]
-                #print(gl.get_value("t_updated"), cc)
-                #print(x, y)
-                x = utils.znormalize(x)
-                y = utils.znormalize(y)
-                dissim = dtw.compute(x, y, self.dimensions)
-                dissim = dissim / log(float(max(len(x), len(y))))
-                fitness.append(dissim)
-            #print(fitness)
+        if gl.get_value("DTW_ALGO") == "CUSTOM_DTW":
+            fitness = dtw.Costom_Dtw(candidates=candidates, v=self.v, dimensions=self.dimensions)
+        if gl.get_value("DTW_ALGO") == "Pierre_DTW":
+            fitness = dtw.Pierre_DTW(candidates=candidates, v=self.v)
         return fitness
-    '''
-    def evaluator(self, candidates, args):
-
-        from numpy import array, zeros, argmin, inf, ndim
-        from scipy.spatial.distance import cdist
-        from numpy.linalg import norm
-        fitness = []
-        #dist = lambda x, y: norm(x - y, ord=1)
-        for cc in candidates:
-            #print("cc",cc)
-            x=self.v[int(cc[0]):int(cc[0]+cc[1]+1)]
-            x=array(x).reshape(-1,1)
-            y=self.v[int(cc[2]):int(cc[2]+cc[3]+1)]
-            y=array(y).reshape(-1,1)
-            r, c = len(x), len(y)
-            #if r==0 or c==0:
-            #    print("##!!!")
-            #    print(cc)
-
-            D0 = zeros((r + 1, c + 1))
-            D0[0, 1:] = inf
-            D0[1:, 0] = inf
-            D1 = D0[1:, 1:]
-            for i in range(r):
-                for j in range(c):
-                    D1[i, j] = self.dist(x[i], y[j])
-
-            C = D1.copy()  # deep copy
-            warp=1
-            for i in range(r):
-                for j in range(c):
-                    min_list = [D0[i, j]]
-                    for k in range(1, warp + 1):
-                        i_k = min(i + k, r - 1)  # the biggest index = r-1.
-                        j_k = min(j + k, c - 1)
-                        min_list += [D0[i_k, j], D0[i, j_k]]  # 3 data item in min_list
-                    D1[i, j] += min(min_list)  # D1[i,j]+=the minimum data item
-            if(cc[0]+cc[1]>=cc[2]) :
-                fitness.append(inf)
-            else:
-                fitness.append(D1[-1, -1] / sum(D1.shape))
-        return fitness
-    '''
