@@ -1,21 +1,19 @@
 from time import time
 from random import Random
 import inspyred
-from numpy.linalg import norm
 import timeseriesproblem
 from utils import load_txt
 import pso
-import globalvar as gl
+import config
 def main(filename, wmin, wmax, pop_size, max_evaluations, prng=None, display=False):
     if prng is None:
         prng = Random()
         prng.seed(time())
 
     v = load_txt(filename)
-
-
+    print("lenth of series: ", len(v))
     problem = timeseriesproblem.timeseriesproblem(dimensions=4, v=v, wmin=wmin, wmax=wmax)
-    gl.set_value("problem", problem)
+
     ea = pso.pso(prng)
     ea.terminator = inspyred.ec.terminators.evaluation_termination
     ea.topology = inspyred.swarm.topologies.ring_topology
@@ -28,7 +26,7 @@ def main(filename, wmin, wmax, pop_size, max_evaluations, prng=None, display=Fal
                           neighborhood_size=5)
     if display:
         #print('Best Solution: \n{0}'.format(str(best)))
-        print('Best Solution: \n{0}'.format(gl.get_value("gbestx")))
+        print('Best Solution: \n{0}'.format(config.get_value("gbestx")))
         return ea
 
 #if __name__ == '__main__':
