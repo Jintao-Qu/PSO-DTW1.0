@@ -1,15 +1,25 @@
 import math
+import globalvar as gl
+from pylab import *
 def load_txt(filename):
-    v=[]
-    file=open(filename,'r')
+    v = []
+    file = open(filename, 'r')
     for i in file.readlines():
-        #i = i.strip('\n')  # 除去换行
         i = i.split(' ')  # 文件以“ ”分隔
-        #if "" in i:  # 解决每行结尾有空格的问题
-            #i.remove("")
         v.append(eval(i[0]))
-        #print("\rserieslength", len(v), end="")
     return v
+
+def show_convergence_rate():
+    f = gl.get_value("f_show_convergence_rate")
+    f.close()
+    v = []
+    picfilename = gl.get_value("scr_picfilename")
+    rf = open(picfilename, 'r')
+    for j in rf.readlines():
+        v.append(eval(j))
+    plot(v)
+    show()
+
 
 def znormalize(x):
     M2 = float(0.0)
@@ -18,7 +28,6 @@ def znormalize(x):
         delta = x[i] - mean
         mean += delta/float(i+1)
         M2 += delta*(x[i]-mean)
-    #print(M2,x, (float(int(len(x)) - 1)))
     std = math.sqrt(M2 / (float(int(len(x)) - 1)))
     for i in range(len(x)):
         x[i] -= mean
