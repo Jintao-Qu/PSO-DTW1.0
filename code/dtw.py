@@ -6,7 +6,8 @@ from scipy.spatial.distance import cdist
 from numpy.linalg import norm
 from math import log
 import utils
-import globalvar as gl
+import config
+import visited
 def argmin(x):
     mn = x[0]
     mni = 0
@@ -98,7 +99,7 @@ def Pierre_DTW(candidates, v):
     fitness = []
     dist = lambda x, y: norm(x - y, ord=1)
     for cc in candidates:
-        if (cc[0] + cc[1] >= cc[2]) and gl.get_value("FORCE_NOT_OVERLAP"):
+        if (cc[0] + cc[1] >= cc[2]) and config.get_value("FORCE_NOT_OVERLAP"):
             fitness.append(inf)
         else:
             x = v[int(cc[0]):int(cc[0] + cc[1] + 1)]
@@ -131,14 +132,19 @@ def Costom_Dtw(candidates, v, dimensions):
     fitness = []
     for cc in candidates:
 
-        if (cc[0] + cc[1] >= cc[2]) and gl.get_value("FORCE_NOT_OVERLAP"):
+        if (cc[0] + cc[1] >= cc[2]) and config.get_value("FORCE_NOT_OVERLAP"):
             fitness.append(inf)
         else:
-            x = v[int(cc[0]):int(cc[0] + cc[1])]
-            y = v[int(cc[2]):int(cc[2] + cc[3])]
-            x = utils.znormalize(x)
-            y = utils.znormalize(y)
-            dissim = compute(x, y, dimensions)
-            dissim = dissim / log(float(max(len(x), len(y))))
-            fitness.append(dissim)
+            key = str(cc[0])+"-"+str(cc[1])+"-"+str(cc[2])+"-"+str(cc[3])
+            if key in visited._visited_dict:
+                fitness.append(visited._visited_dict[key])
+            else:
+                x = v[int(cc[0]):int(cc[0] + cc[1])]
+                y = v[int(cc[2]):int(cc[2] + cc[3])]
+                x = utils.znormalize(x)
+                y = utils.znormalize(y)
+                dissim = compute(x, y, dimensions)
+                dissim = dissim / log(float(max(len(x), len(y))))
+                visited.set_value("key", dissim)
+                fitness.append(dissim)
     return fitness
