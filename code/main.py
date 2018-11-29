@@ -12,7 +12,7 @@ def main(filename, wmin, wmax, pop_size, max_evaluations, prng=None, display=Fal
         prng.seed(time())
 
     v = load_txt(filename)
-    print("len_v: ", len(v))
+
 
     problem = timeseriesproblem.timeseriesproblem(dimensions=4, v=v, wmin=wmin, wmax=wmax)
     gl.set_value("problem", problem)
