@@ -1,7 +1,7 @@
 from inspyred.benchmarks import *
 import bounder
 import dtw
-import globalvar as gl
+import config
 class timeseriesproblem(Benchmark):
     def __init__(self, v, dimensions, wmin, wmax):
         Benchmark.__init__(self, dimensions)
@@ -25,8 +25,8 @@ class timeseriesproblem(Benchmark):
     def evaluator(self, candidates, args):
 
         fitness = []
-        if gl.get_value("DTW_ALGO") == "CUSTOM_DTW":
+        if config.get_value("DTW_ALGO") == "CUSTOM_DTW":
             fitness = dtw.Costom_Dtw(candidates=candidates, v=self.v, dimensions=self.dimensions)
-        if gl.get_value("DTW_ALGO") == "Pierre_DTW":
+        if config.get_value("DTW_ALGO") == "Pierre_DTW":
             fitness = dtw.Pierre_DTW(candidates=candidates, v=self.v)
         return fitness
