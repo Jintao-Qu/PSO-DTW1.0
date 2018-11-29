@@ -1,14 +1,19 @@
 from numpy import array, zeros, argmin, inf, ndim
 from scipy.spatial.distance import cdist
 from numpy.linalg import norm
-
+from numpy import array, zeros, argmin, inf, ndim
+from scipy.spatial.distance import cdist
+from numpy.linalg import norm
+from math import log
+import utils
+import globalvar as gl
 def argmin(x):
     mn = x[0]
-    mni=0
+    mni = 0
     for i in range(len(x)):
-        if(x[i]<mn):
-            mn=x[i]
-            mni=i
+        if(x[i] < mn):
+            mn = x[i]
+            mni = i
     return mni
 
 def compute(x ,y ,window_size):
@@ -88,3 +93,52 @@ def compute(x ,y ,window_size):
 
 
     return D[len(x)-1][len(y)-1]/weights[len(x)-1][len(y)-1]
+
+def Pierre_DTW(candidates, v):
+    fitness = []
+    dist = lambda x, y: norm(x - y, ord=1)
+    for cc in candidates:
+        if (cc[0] + cc[1] >= cc[2]) and gl.get_value("FORCE_NOT_OVERLAP"):
+            fitness.append(inf)
+        else:
+            x = v[int(cc[0]):int(cc[0] + cc[1] + 1)]
+            x = array(x).reshape(-1, 1)
+            y = v[int(cc[2]):int(cc[2] + cc[3] + 1)]
+            y = array(y).reshape(-1, 1)
+            r, c = len(x), len(y)
+            D0 = zeros((r + 1, c + 1))
+            D0[0, 1:] = inf
+            D0[1:, 0] = inf
+            D1 = D0[1:, 1:]
+            for i in range(r):
+                for j in range(c):
+                    D1[i, j] = dist(x[i], y[j])
+
+            C = D1.copy()  # deep copy
+            warp = 1
+            for i in range(r):
+                for j in range(c):
+                    min_list = [D0[i, j]]
+                    for k in range(1, warp + 1):
+                        i_k = min(i + k, r - 1)  # the biggest index = r-1.
+                        j_k = min(j + k, c - 1)
+                        min_list += [D0[i_k, j], D0[i, j_k]]  # 3 data item in min_list
+                    D1[i, j] += min(min_list)  # D1[i,j]+=the minimum data item
+
+            fitness.append(D1[-1, -1] / sum(D1.shape))
+    return fitness
+def Costom_Dtw(candidates, v, dimensions):
+    fitness = []
+    for cc in candidates:
+
+        if (cc[0] + cc[1] >= cc[2]) and gl.get_value("FORCE_NOT_OVERLAP"):
+            fitness.append(inf)
+        else:
+            x = v[int(cc[0]):int(cc[0] + cc[1])]
+            y = v[int(cc[2]):int(cc[2] + cc[3])]
+            x = utils.znormalize(x)
+            y = utils.znormalize(y)
+            dissim = compute(x, y, dimensions)
+            dissim = dissim / log(float(max(len(x), len(y))))
+            fitness.append(dissim)
+    return fitness
