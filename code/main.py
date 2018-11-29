@@ -14,8 +14,7 @@ def main(filename, wmin, wmax, pop_size, max_evaluations, prng=None, display=Fal
     v = load_txt(filename)
     print("len_v: ", len(v))
 
-    problem = timeseriesproblem.timeseriesproblem(dimensions=4, v=v, wmin=wmin, wmax=wmax,
-                                                  dist=lambda x, y: norm(x - y, ord=1))
+    problem = timeseriesproblem.timeseriesproblem(dimensions=4, v=v, wmin=wmin, wmax=wmax)
     gl.set_value("problem", problem)
     ea = pso.pso(prng)
     ea.terminator = inspyred.ec.terminators.evaluation_termination
@@ -28,12 +27,6 @@ def main(filename, wmin, wmax, pop_size, max_evaluations, prng=None, display=Fal
                           max_evaluations=max_evaluations,
                           neighborhood_size=5)
     if display:
-        #if (gl.get_value("Elite") == False):
-        #    best = max(final_pop)
-        #else:
-        #    el = gl.get_value("Elite_list")
-        #    best = max(el)
-
         #print('Best Solution: \n{0}'.format(str(best)))
         print('Best Solution: \n{0}'.format(gl.get_value("gbestx")))
         return ea
