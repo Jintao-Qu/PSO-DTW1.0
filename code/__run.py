@@ -1,19 +1,21 @@
 from main import *
-import globalvar as gl
+import config
 import utils
+import visited
 
-gl._init()
 for i in range(10):
-    filename = gl.get_value("filename")
-    if(gl.get_value("SHOW_CONVERGENCE_RATE")):
-        picfilename = gl.get_value("scr_picfilename")
-        f = open(picfilename, "w")
-        gl.set_value("f_show_convergence_rate", f)
+    config._init()
+    visited._init_visited_set()
+    filename = config.get_value("filename")
 
-    main(filename=filename, wmin=gl.get_value("wmin"), wmax=gl.get_value("wmax"),
-         pop_size=gl.get_value("pop_size"), max_evaluations=gl.get_value("max_evaluations"), display=True)
+    main(filename=filename, wmin=config.get_value("wmin"), wmax=config.get_value("wmax"),
+         pop_size=config.get_value("pop_size"), max_evaluations=config.get_value("max_evaluations"), display=True)
 
-    if(gl.get_value("SHOW_CONVERGENCE_RATE")):
+    if(config.get_value("SHOW_CONVERGENCE_RATE")):
         utils.show_convergence_rate()
+    if(config.get_value("SHOW_SWARM_DISTRIBUTION")):
+        utils.show_swarm_distribution()
+
+
 
 
