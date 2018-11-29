@@ -1,6 +1,7 @@
 import math
-import globalvar as gl
+import config
 from pylab import *
+import matplotlib.pyplot as plt
 def load_txt(filename):
     v = []
     file = open(filename, 'r')
@@ -10,13 +11,8 @@ def load_txt(filename):
     return v
 
 def show_convergence_rate():
-    f = gl.get_value("f_show_convergence_rate")
-    f.close()
-    v = []
-    picfilename = gl.get_value("scr_picfilename")
-    rf = open(picfilename, 'r')
-    for j in rf.readlines():
-        v.append(eval(j))
+
+    v = config.get_value("CONVERGENCE_RATE_LIST")
     plot(v)
     show()
 
@@ -36,3 +32,27 @@ def znormalize(x):
     for i in range(len(x)):
         x[i] /= std
     return x
+
+def Replace_Elite(population):
+    el = config.get_value("Elite_list")
+    if (len(el) == 0):
+        el = population
+        config.set_value("Elite_list", el)
+    else:
+        for i in population:
+            mmin = min(el)
+            idx = el.index(min(el))
+            if (i > mmin):
+                el[idx] = i
+        config.set_value("Elite_list", el)
+    return el
+
+def show_swarm_distribution():
+    Xi = config.get_value("Xi")
+    Xj = config.get_value("Xj")
+    #Wi = config.get_value("Wi")
+    #Wj = config.get_value("Wj")
+    plt.scatter(Xi, Xj)
+    plt.show()
+    #plt.scatter(Wi, Wj)
+    #plt.show()
