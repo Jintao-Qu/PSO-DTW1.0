@@ -98,14 +98,18 @@ class pso(inspyred.ec.EvolutionaryComputation):
         t_updated = config.get_value("t_updated")
         config.set_value("t_updated", t_updated+1)
         if(config.get_value("t_updated") - config.get_value("t_lastupdate") >= config.get_value("TCONV")):
-            num_generated = config.get_value("pop_size")
-            i = 0
             initial_cs = []
-            while i < num_generated:
-                cs = self.generator(random=self._random, args=self._kwargs)
-                initial_cs.append(cs)
-                i += 1
-            self.logger.debug('evaluating initial population')
+            if config.get_value("CHAOS_ALGO") != "None":
+                initial_cs = utils.CHAOS_INIT()
+            else:
+                num_generated = config.get_value("pop_size")
+                i = 0
+                initial_cs = []
+                while i < num_generated:
+                    cs = self.generator(random=self._random, args=self._kwargs)
+                    initial_cs.append(cs)
+                    i += 1
+                self.logger.debug('evaluating initial population')
             initial_fit = self.evaluator(candidates=initial_cs, args=self._kwargs)
             population = []
             for cs, fit in zip(initial_cs, initial_fit):
