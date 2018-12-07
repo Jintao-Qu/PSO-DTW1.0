@@ -3,6 +3,7 @@ import config
 from pylab import *
 import matplotlib.pyplot as plt
 import math
+
 def load_txt(filename):
     v = []
     file = open(filename, 'r')
@@ -12,8 +13,10 @@ def load_txt(filename):
     return v
 
 def show_convergence_rate():
-
     v = config.get_value("CONVERGENCE_RATE_LIST")
+    x = []
+    for i in range(len(v)):
+        x.append(i+1)
     plot(v)
     show()
 
