@@ -10,7 +10,7 @@ class timeseriesproblem(Benchmark):
         self.wmin = wmin
         self.wmax = wmax
         
-        self.bounder = bounder.bounder(len=self.len,lower_bound=[0, self.wmin, 0, self.wmin],
+        self.bounder = bounder.bounder(len=self.len, lower_bound=[0, self.wmin, 0, self.wmin],
                                   upper_bound=[self.len, self.wmax, self.len, self.wmax])
         self.maximize = False
         self.global_optimum = [0 for _ in range(self.dimensions)]
