@@ -2,8 +2,12 @@ from main import *
 import config
 import utils
 import visited
+import globalvar as gl
 
-for i in range(10):
+gl._init_globalar()
+gl.set_value("gbest_sum", 0)
+for i in range(30):
+    print("run...", i)
     config._init()
     visited._init_visited_set()
     filename = config.get_value("filename")
@@ -15,7 +19,7 @@ for i in range(10):
         utils.show_convergence_rate()
     if(config.get_value("SHOW_SWARM_DISTRIBUTION")):
         utils.show_swarm_distribution()
-
+print("Best_SUM= ", gl.get_value("gbest_sum"))
 
 
 
