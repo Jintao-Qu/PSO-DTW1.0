@@ -3,9 +3,9 @@ from random import Random
 import inspyred
 import timeseriesproblem
 from utils import load_txt, CHAOS_INIT
-
 import pso
 import config
+import globalvar as gl
 def main(filename, wmin, wmax, pop_size, max_evaluations, prng=None, display=False):
     if prng is None:
         prng = Random()
@@ -32,9 +32,15 @@ def main(filename, wmin, wmax, pop_size, max_evaluations, prng=None, display=Fal
                           maximize=problem.maximize,
                           max_evaluations=max_evaluations,
                           neighborhood_size=5)
+
     if display:
         #print('Best Solution: \n{0}'.format(str(best)))
         print('Best Solution: \n{0}'.format(config.get_value("gbestx")))
+
+        if "gbest_sum" in gl._global_dict:
+            gl.set_value("gbest_sum", gl.get_value("gbest_sum")+config.get_value("gbest"))
+        else:
+            gl.set_value("gbest_sum", config.get_value("gbest"))
         return ea
 
 #if __name__ == '__main__':
