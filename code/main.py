@@ -6,14 +6,13 @@ from utils import load_txt, CHAOS_INIT
 import pso
 import config
 import globalvar as gl
-def main(filename, wmin, wmax, pop_size, max_evaluations, prng=None, display=False):
+def main(data, wmin, wmax, pop_size, max_evaluations, prng=None, display=False):
     if prng is None:
         prng = Random()
         prng.seed(time())
 
-    v = load_txt(filename)
+    v = data
     config.set_value("series_length", len(v))
-    print("lenth of series: ", len(v))
     problem = timeseriesproblem.timeseriesproblem(dimensions=4, v=v, wmin=wmin, wmax=wmax)
 
     ea = pso.pso(prng)
@@ -37,7 +36,7 @@ def main(filename, wmin, wmax, pop_size, max_evaluations, prng=None, display=Fal
         #print('Best Solution: \n{0}'.format(str(best)))
         print('Best Solution: \n{0}'.format(config.get_value("gbestx")))
 
-        if "gbest_sum" in gl._global_dict:
+        if gl.get_value("gbest_sum") != "not found":
             gl.set_value("gbest_sum", gl.get_value("gbest_sum")+config.get_value("gbest"))
         else:
             gl.set_value("gbest_sum", config.get_value("gbest"))
