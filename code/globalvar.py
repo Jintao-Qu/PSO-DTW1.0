@@ -6,4 +6,7 @@ def set_value(name, value):
     _global_dict[name] = value
 
 def get_value(name):
-    return _global_dict[name]
+    if name in _global_dict:
+        return _global_dict[name]
+    else:
+        return "not found"
