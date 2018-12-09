@@ -23,7 +23,6 @@ class timeseriesproblem(Benchmark):
         return [twi, tw1, twj, tw2]
 
     def evaluator(self, candidates, args):
-
         fitness = []
         if config.get_value("DTW_ALGO") == "CUSTOM_DTW":
             fitness = dtw.Costom_Dtw(candidates=candidates, v=self.v, dimensions=self.dimensions)
