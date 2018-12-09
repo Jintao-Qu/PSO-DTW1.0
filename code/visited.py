@@ -6,4 +6,7 @@ def set_value(name, value):
     _visited_dict[name] = value
 
 def get_value(name):
-    return _visited_dict[name]
+    if name in _visited_dict:
+        return _visited_dict[name]
+    else:
+        return "not found"
