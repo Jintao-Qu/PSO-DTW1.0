@@ -5,14 +5,16 @@ import visited
 import globalvar as gl
 
 gl._init_globalar()
-gl.set_value("gbest_sum", 0)
-for i in range(30):
+config._init()
+v = load_txt(config.get_value("filename"))
+print("lenth of series: ", len(v))
+for i in range(10):
     print("run...", i)
     config._init()
     visited._init_visited_set()
     filename = config.get_value("filename")
 
-    main(filename=filename, wmin=config.get_value("wmin"), wmax=config.get_value("wmax"),
+    main(data=v, wmin=config.get_value("wmin"), wmax=config.get_value("wmax"),
          pop_size=config.get_value("pop_size"), max_evaluations=config.get_value("max_evaluations"), display=True)
 
     if(config.get_value("SHOW_CONVERGENCE_RATE")):
