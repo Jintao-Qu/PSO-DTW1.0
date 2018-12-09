@@ -103,9 +103,8 @@ def Pierre_DTW(candidates, v):
             fitness.append(5.0)
         else:
             key = str(cc[0]) + "-" + str(cc[1]) + "-" + str(cc[2]) + "-" + str(cc[3])
-            if key in visited._visited_dict:
-                print("!!!find################################", key)
-                fitness.append(visited._visited_dict[key])
+            if visited.get_value(key) != "not found":
+                fitness.append(visited.get_value(key))
             else:
                 x = v[int(cc[0]):int(cc[0] + cc[1] + 1)]
                 x = array(x).reshape(-1, 1)
@@ -130,7 +129,7 @@ def Pierre_DTW(candidates, v):
                             j_k = min(j + k, c - 1)
                             min_list += [D0[i_k, j], D0[i, j_k]]  # 3 data item in min_list
                         D1[i, j] += min(min_list)  # D1[i,j]+=the minimum data item
-
+                visited.set_value(key, D1[-1, -1] / sum(D1.shape))
                 fitness.append(D1[-1, -1] / sum(D1.shape))
     return fitness
 def Costom_Dtw(candidates, v, dimensions):
@@ -141,9 +140,8 @@ def Costom_Dtw(candidates, v, dimensions):
             fitness.append(5.0)
         else:
             key = str(cc[0])+"-"+str(cc[1])+"-"+str(cc[2])+"-"+str(cc[3])
-            if key in visited._visited_dict:
-                print("!!!find", key)
-                fitness.append(visited._visited_dict[key])
+            if visited.get_value(key) != "not found":
+                fitness.append(visited.get_value(key))
             else:
                 x = v[int(cc[0]):int(cc[0] + cc[1])]
                 y = v[int(cc[2]):int(cc[2] + cc[3])]
@@ -151,6 +149,6 @@ def Costom_Dtw(candidates, v, dimensions):
                 y = utils.znormalize(y)
                 dissim = compute(x, y, dimensions)
                 dissim = dissim / log(float(max(len(x), len(y))))
-                visited.set_value("key", dissim)
+                visited.set_value(key, dissim)
                 fitness.append(dissim)
     return fitness
