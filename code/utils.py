@@ -8,7 +8,7 @@ def load_txt(filename):
     v = []
     file = open(filename, 'r')
     for i in file.readlines():
-        i = i.split(' ')  # 文件以“ ”分隔
+        i = i.split(' ')
         v.append(eval(i[0]))
     return v
 

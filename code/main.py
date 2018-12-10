@@ -13,7 +13,7 @@ def main(data, wmin, wmax, pop_size, max_evaluations, prng=None, display=False):
 
     v = data
     config.set_value("series_length", len(v))
-    problem = timeseriesproblem.timeseriesproblem(dimensions=4, v=v, wmin=wmin, wmax=wmax)
+    problem = timeseriesproblem.timeseriesproblem(dimensions=4, v=v, wmin=wmin, wmax=wmax, random=prng)
 
     ea = pso.pso(prng)
     ea.terminator = inspyred.ec.terminators.evaluation_termination

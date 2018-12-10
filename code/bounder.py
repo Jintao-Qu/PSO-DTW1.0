@@ -6,6 +6,7 @@ import itertools
 import logging
 import math
 import time
+import config
 
 
 class bounder(object):
@@ -53,9 +54,10 @@ class bounder(object):
 
     """
 
-    def __init__(self, len, lower_bound=None, upper_bound=None):
+    def __init__(self, len, random, lower_bound=None, upper_bound=None):
         self.lower_bound = lower_bound
         self.upper_bound = upper_bound
+        self.random = random
         self.len = len
         if self.lower_bound is not None and self.upper_bound is not None:
             if not isinstance(self.lower_bound, collections.Iterable):
@@ -78,14 +80,33 @@ class bounder(object):
             for i, (c, lo, hi) in enumerate(zip(candidate, self.lower_bound,
                                                 self.upper_bound)):
                 bounded_candidate[i] = int(max(min(c, hi), lo))
+            if config.get_value("bounder") == "attach":
+                if (bounded_candidate[0] + bounded_candidate[1] > self.len):
+                    sublen = bounded_candidate[0] + bounded_candidate[1] - self.len
+                    bounded_candidate[0] = bounded_candidate[0] - sublen
+                if (bounded_candidate[2] + bounded_candidate[3] > self.len):
+                    sublen = bounded_candidate[2] + bounded_candidate[3] - self.len
+                    bounded_candidate[2] = bounded_candidate[2] - sublen
+            elif config.get_value("bounder") == "MOD":
+                if (bounded_candidate[0] + bounded_candidate[1] > self.len):
+                    bounded_candidate[0] = (bounded_candidate[0] + bounded_candidate[1]) % self.len
+                if (bounded_candidate[2] + bounded_candidate[3] > self.len):
+                    bounded_candidate[2] = (bounded_candidate[2] + bounded_candidate[3]) % self.len
+            elif config.get_value("bounder") == "CRAZY":
+                if self.random.random() < config.get_value("CRAZY"):
+                    while (bounded_candidate[0] + bounded_candidate[1] > self.len) or \
+                            (bounded_candidate[2] + bounded_candidate[3] > self.len):
+                        tw1 = self.random.randint(config.get_value("wmin"), config.get_value("wmax"))
+                        tw2 = self.random.randint(config.get_value("wmin"), config.get_value("wmax"))
+                        twi = self.random.randint(0, self.len - tw1)
+                        twj = self.random.randint(0, self.len - tw2)
+                        bounded_candidate = [twi, tw1, twj, tw2]
+                else:
+                    if (bounded_candidate[0] + bounded_candidate[1] > self.len):
+                        sublen = bounded_candidate[0] + bounded_candidate[1] - self.len
+                        bounded_candidate[0] = bounded_candidate[0] - sublen
 
-            if (bounded_candidate[0] + bounded_candidate[1] > self.len):
-                sublen = bounded_candidate[0] + bounded_candidate[1] - self.len
-                bounded_candidate[0] = bounded_candidate[0] - sublen
-                #bounded_candidate[1] = bounded_candidate[1] - sublen
-            if (bounded_candidate[2] + bounded_candidate[3] > self.len):
-                sublen = bounded_candidate[2] + bounded_candidate[3] - self.len
-                bounded_candidate[2] = bounded_candidate[2] - sublen
-                #bounded_candidate[3] = bounded_candidate[3] - sublen
-
+                    if (bounded_candidate[2] + bounded_candidate[3] > self.len):
+                        sublen = bounded_candidate[2] + bounded_candidate[3] - self.len
+                        bounded_candidate[2] = bounded_candidate[2] - sublen
             return bounded_candidate

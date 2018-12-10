@@ -8,7 +8,7 @@ gl._init_globalar()
 config._init()
 v = load_txt(config.get_value("filename"))
 print("lenth of series: ", len(v))
-for i in range(10):
+for i in range(30):
     print("run...", i)
     config._init()
     visited._init_visited_set()

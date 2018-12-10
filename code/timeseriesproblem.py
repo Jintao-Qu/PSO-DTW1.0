@@ -3,15 +3,14 @@ import bounder
 import dtw
 import config
 class timeseriesproblem(Benchmark):
-    def __init__(self, v, dimensions, wmin, wmax):
+    def __init__(self, v, dimensions, wmin, wmax, random):
         Benchmark.__init__(self, dimensions)
         self.v = v
         self.len = len(self.v)
         self.wmin = wmin
         self.wmax = wmax
-        
         self.bounder = bounder.bounder(len=self.len, lower_bound=[0, self.wmin, 0, self.wmin],
-                                  upper_bound=[self.len, self.wmax, self.len, self.wmax])
+                                  upper_bound=[self.len, self.wmax, self.len, self.wmax], random=random)
         self.maximize = False
         self.global_optimum = [0 for _ in range(self.dimensions)]
 
