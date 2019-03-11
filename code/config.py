@@ -9,7 +9,7 @@ def _init():
     _config_dict["gbest"] = 0x3f3f3f3f
 
     _config_dict["bounder"] = "attach"#attach, MOD, CRAZY
-    _config_dict["CRAZY"] = 0.0
+    _config_dict["CRAZY"] = 0.09
     _config_dict["IF_Elite"] = True
     _config_dict["Elite_list"] = []
 
@@ -25,9 +25,9 @@ def _init():
     _config_dict["SHOW_CONVERGENCE_RATE"] = True
     _config_dict["CONVERGENCE_RATE_LIST"] = []
 
-    _config_dict["SHOW_SWARM_DISTRIBUTION"] = True
-    _config_dict["SHOW_INIT_SWARM"] = True
-    _config_dict["SHOW_SWARM_CYCLE"] = 100
+    _config_dict["SHOW_SWARM_DISTRIBUTION"] = False
+    _config_dict["SHOW_INIT_SWARM"] = False
+    _config_dict["SHOW_SWARM_CYCLE"] = 0x3f3f3f3f
     _config_dict["Xi"] = []
     _config_dict["Xj"] = []
     _config_dict["Wi"] = []

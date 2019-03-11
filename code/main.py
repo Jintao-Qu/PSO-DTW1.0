@@ -2,7 +2,7 @@ from time import time
 from random import Random
 import inspyred
 import timeseriesproblem
-from utils import load_txt, CHAOS_INIT
+from utils import CHAOS_INIT
 import pso
 import config
 import globalvar as gl
@@ -18,6 +18,7 @@ def main(data, wmin, wmax, pop_size, max_evaluations, prng=None, display=False):
     ea = pso.pso(prng)
     ea.terminator = inspyred.ec.terminators.evaluation_termination
     ea.topology = inspyred.swarm.topologies.ring_topology
+    ea.observer = inspyred.ec.observers.stats_observer
 
     seeds = []
     if config.get_value("CHAOS_ALGO") != "None":

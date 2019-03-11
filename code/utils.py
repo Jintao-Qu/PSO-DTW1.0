@@ -1,15 +1,20 @@
-import math
 import config
-from pylab import *
 import matplotlib.pyplot as plt
 import math
-
+import sys
 def load_txt(filename):
+
     v = []
+    cnt = 0
+
     file = open(filename, 'r')
     for i in file.readlines():
         i = i.split(' ')
         v.append(eval(i[0]))
+        cnt += 1
+        sys.stdout.flush()
+        sys.stdout.write('\r'+"LOADING " + filename + " " + str(cnt))
+    sys.stdout.write('\r'+"LOADING " + filename + " FINISHED, " + "DATA SIZE: " + str(len(v)) + '\n')
     return v
 
 def show_convergence_rate():
@@ -17,8 +22,8 @@ def show_convergence_rate():
     x = []
     for i in range(len(v)):
         x.append(i+1)
-    plot(v)
-    show()
+    plt.plot(v)
+    plt.show()
 
 
 def znormalize(x):

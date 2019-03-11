@@ -6,8 +6,7 @@ import globalvar as gl
 
 gl._init_globalar()
 config._init()
-v = load_txt(config.get_value("filename"))
-print("lenth of series: ", len(v))
+v = utils.load_txt(config.get_value("filename"))
 for i in range(30):
     print("run...", i)
     config._init()

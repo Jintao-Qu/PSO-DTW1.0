@@ -131,7 +131,6 @@ class pso(inspyred.ec.EvolutionaryComputation):
             population = utils.Replace_Elite(population=population)
         return population
 
-
     def _swarm_replacer(self, random, population, parents, offspring, args):
         self._previous_population = population[:]
         return offspring
