@@ -95,4 +95,10 @@ def CHAOS_INIT():
             update_chaos_seed_cube()
 
     return seeds
-
+def SHOW_MOTIF(data, lis):
+    a = data[lis[0]:lis[0]+lis[1]]
+    b = data[lis[2]:lis[2]+lis[3]]
+    plt.plot(a)
+    plt.plot(b)
+    plt.show()
+    return

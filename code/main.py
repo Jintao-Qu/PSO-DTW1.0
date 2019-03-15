@@ -2,7 +2,7 @@ from time import time
 from random import Random
 import inspyred
 import timeseriesproblem
-from utils import CHAOS_INIT
+from utils import CHAOS_INIT, SHOW_MOTIF
 import pso
 import config
 import globalvar as gl
@@ -18,7 +18,7 @@ def main(data, wmin, wmax, pop_size, max_evaluations, prng=None, display=False):
     ea = pso.pso(prng)
     ea.terminator = inspyred.ec.terminators.evaluation_termination
     ea.topology = inspyred.swarm.topologies.ring_topology
-    ea.observer = inspyred.ec.observers.stats_observer
+    ea.observer = inspyred.ec.observers.default_observer
 
     seeds = []
     if config.get_value("CHAOS_ALGO") != "None":
@@ -34,9 +34,11 @@ def main(data, wmin, wmax, pop_size, max_evaluations, prng=None, display=False):
                           neighborhood_size=5)
 
     if display:
-        #print('Best Solution: \n{0}'.format(str(best)))
-        print('Best Solution: \n{0}'.format(config.get_value("gbestx")))
-
+        best = max(final_pop)
+        print('Best Solution: \n{0}'.format(str(best)))
+        #print('Best Solution: \n{0}'.format(config.get_value("gbestx")))
+        if config.get_value("SHOW_MOTIF") == True:
+            SHOW_MOTIF(data, best.candidate)
         if gl.get_value("gbest_sum") != "not found":
             gl.set_value("gbest_sum", gl.get_value("gbest_sum")+config.get_value("gbest"))
         else:
